@@ -19,11 +19,13 @@ export const Counter = () => {
     const miliseconds = Math.round((totalSeconds - integerSeconds) * 1000);
     const minutes = Math.floor(integerSeconds / 60);
     const seconds = integerSeconds % 60;
-    if (minutes < 10 && seconds < 10) {
-      return `0${minutes}:0${seconds}:${miliseconds}`;
-    } else {
-      return `${minutes}:${seconds}:${miliseconds}`;
-    }
+    
+    return (
+      (minutes < 10 ? `0${minutes}:` : `${minutes}:`) +
+      (seconds < 10 ? `0${seconds}:` : `${seconds}:`) +
+      `${miliseconds}`
+    );
+    
   };
 
   return <h1>{formatTime(counter)}</h1>;
