@@ -1,26 +1,44 @@
 import { useState } from "react";
 import { Btn } from "./Button/Btn";
 import { Counter } from "./Counter/Counter";
+import { SingleRecord } from "./Types/types";
+import { ResultTable } from "./ResultsTable/ResultsTable";
 
 export const StopWatch = () => {
   const [actionOverall, setActionOverall] = useState<boolean | string>(false);
   const [actionLap, setActionLap] = useState<boolean | string>(false);
+  const [records, setRecords] = useState<SingleRecord[]>([]);
 
   const btnActionOverall = (att: boolean | string) => {
+    console.log(att);
+
     setActionOverall(att);
     setActionLap(att);
+    if (att === "reset") {
+      setRecords([]);
+    }
+  };
+
+  const addRecord = (record: string) => {
+    setRecords((prevRecords) => {
+      const newRecord: SingleRecord = {
+        lap: prevRecords.length + 1,
+        lapTime: record,
+      };
+      return [...prevRecords, newRecord];
+    });
   };
 
   const btnActionLap = async (att: boolean | string) => {
     setActionLap(att);
-    await console.log("Result");
+    await addRecord;
     if (actionOverall === true) setActionLap(true);
   };
 
   return (
     <>
-      <Counter counterAction={actionOverall} />
-      <Counter counterAction={actionLap} />
+      <Counter callback={addRecord} counterAction={actionOverall} />
+      <Counter callback={addRecord} counterAction={actionLap} />
       <Btn
         callback={btnActionOverall}
         name="Start"
@@ -45,6 +63,9 @@ export const StopWatch = () => {
         type="lap"
         backgroundColor="blue"
       />
+      <table>
+        <ResultTable resultRecord={records} />
+      </table>
     </>
   );
 };

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { formatTime } from "../Utils/TimeFormater";
 
 type CounterAction = {
   counterAction: boolean | string;
+  callback: (record: string) => void;
 };
 
-export const Counter = ({ counterAction }: CounterAction) => {
+export const Counter = ({ counterAction, callback }: CounterAction) => {
   const [counter, setCounter] = useState(0);
   const [isActive, setIsActive] = useState<boolean | string>(false);
   const [intervalId, setIntervalId] = useState(null);
@@ -17,6 +19,7 @@ export const Counter = ({ counterAction }: CounterAction) => {
     if (counterAction === "lap") {
       setCounter(0);
       setIsActive(false);
+      callback(formatTime(counter));
     }
     if (counterAction === true) {
       setIsActive(true);
@@ -42,22 +45,6 @@ export const Counter = ({ counterAction }: CounterAction) => {
   useEffect(() => {
     start();
   }, [isActive]);
-
-  const formatTime = (counter: number) => {
-    const totalSeconds = counter / 10;
-    const integerSeconds = Math.floor(totalSeconds);
-    const miliseconds = Math.round(
-      ((totalSeconds - integerSeconds) * 1000) / 100
-    );
-    const minutes = Math.floor(integerSeconds / 60);
-    const seconds = integerSeconds % 60;
-
-    return (
-      (minutes < 10 ? `0${minutes}:` : `${minutes}:`) +
-      (seconds < 10 ? `0${seconds}:` : `${seconds}:`) +
-      `${miliseconds}`
-    );
-  };
 
   return (
     <>
