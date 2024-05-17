@@ -6,11 +6,15 @@ import { ResultTable } from "./ResultsTable/ResultsTable";
 import { Summary } from "./Summary/Summary";
 
 export const StopWatch = () => {
+  const [mode, setMode] = useState(true);
   const [actionOverall, setActionOverall] = useState<boolean | string>(false);
   const [actionLap, setActionLap] = useState<boolean | string>(false);
   const [records, setRecords] = useState<SingleRecord[]>([]);
 
   const btnActionOverall = (att: boolean | string) => {
+    if (att === false) {
+      setMode(false);
+    }
     setActionOverall(att);
     setActionLap(att);
     if (att === "reset") {
@@ -34,38 +38,51 @@ export const StopWatch = () => {
     if (actionOverall === true) setActionLap(true);
   };
 
+  const backToCounter = () => {
+    setMode(true);
+    setRecords([]);
+  };
+
   return (
     <>
-      <Counter callback={addRecord} counterAction={actionOverall} />
-      <Counter callback={addRecord} counterAction={actionLap} />
-      <Btn
-        callback={btnActionOverall}
-        name="Start"
-        type={true}
-        backgroundColor="green"
-      />
-      <Btn
-        callback={btnActionOverall}
-        name="Stop"
-        type={false}
-        backgroundColor="yellow"
-      />
-      <Btn
-        callback={btnActionOverall}
-        name="Reset"
-        type="reset"
-        backgroundColor="red"
-      />
-      <Btn
-        callback={btnActionLap}
-        name="Lap"
-        type="lap"
-        backgroundColor="blue"
-      />
-      <table>
-        <ResultTable resultRecord={records} />
-      </table>
-      <Summary summary={records} />
+      {mode ? (
+        <>
+          <Counter callback={addRecord} counterAction={actionOverall} />
+          <Counter callback={addRecord} counterAction={actionLap} />
+          <Btn
+            callback={btnActionOverall}
+            name="Start"
+            type={true}
+            backgroundColor="green"
+          />
+          <Btn
+            callback={btnActionOverall}
+            name="Stop"
+            type={false}
+            backgroundColor="yellow"
+          />
+          <Btn
+            callback={btnActionOverall}
+            name="Reset"
+            type="reset"
+            backgroundColor="red"
+          />
+          <Btn
+            callback={btnActionLap}
+            name="Lap"
+            type="lap"
+            backgroundColor="blue"
+          />
+          <table>
+            <ResultTable resultRecord={records} />
+          </table>
+        </>
+      ) : (
+        <>
+          <Summary summary={records} />
+          <button onClick={backToCounter}>Back</button>
+        </>
+      )}
     </>
   );
 };
