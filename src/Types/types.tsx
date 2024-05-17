@@ -1,4 +1,4 @@
 export type SingleRecord = {
   lap: number;
-  lapTime: string;
+  lapTime: number;
 };

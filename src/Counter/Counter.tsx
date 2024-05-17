@@ -3,7 +3,7 @@ import { formatTime } from "../Utils/TimeFormater";
 
 type CounterAction = {
   counterAction: boolean | string;
-  callback: (record: string) => void;
+  callback: (record: number) => void;
 };
 
 export const Counter = ({ counterAction, callback }: CounterAction) => {
@@ -19,7 +19,7 @@ export const Counter = ({ counterAction, callback }: CounterAction) => {
     if (counterAction === "lap") {
       setCounter(0);
       setIsActive(false);
-      callback(formatTime(counter));
+      callback(counter);
     }
     if (counterAction === true) {
       setIsActive(true);

@@ -3,6 +3,7 @@ import { Btn } from "./Button/Btn";
 import { Counter } from "./Counter/Counter";
 import { SingleRecord } from "./Types/types";
 import { ResultTable } from "./ResultsTable/ResultsTable";
+import { Summary } from "./Summary/Summary";
 
 export const StopWatch = () => {
   const [actionOverall, setActionOverall] = useState<boolean | string>(false);
@@ -10,8 +11,6 @@ export const StopWatch = () => {
   const [records, setRecords] = useState<SingleRecord[]>([]);
 
   const btnActionOverall = (att: boolean | string) => {
-    console.log(att);
-
     setActionOverall(att);
     setActionLap(att);
     if (att === "reset") {
@@ -19,7 +18,7 @@ export const StopWatch = () => {
     }
   };
 
-  const addRecord = (record: string) => {
+  const addRecord = (record: number) => {
     setRecords((prevRecords) => {
       const newRecord: SingleRecord = {
         lap: prevRecords.length + 1,
@@ -66,6 +65,7 @@ export const StopWatch = () => {
       <table>
         <ResultTable resultRecord={records} />
       </table>
+      <Summary summary={records} />
     </>
   );
 };
