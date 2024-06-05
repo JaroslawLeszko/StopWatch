@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { formatTime } from '../Utils/TimeFormater'
 
 import './Counter.css'
@@ -11,7 +11,7 @@ type CounterAction = {
 export const Counter = ({ counterAction, callback }: CounterAction) => {
   const [counter, setCounter] = useState(0)
   const [isActive, setIsActive] = useState<boolean>(false)
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
+  const intervalId = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (counterAction === 'reset') {
@@ -32,21 +32,21 @@ export const Counter = ({ counterAction, callback }: CounterAction) => {
   }, [counterAction, counter, callback])
 
   useEffect(() => {
-    const start = () => {
-      if (isActive) {
-        const id = setInterval(() => {
-          setCounter((prevTime) => prevTime + 1)
-        }, 100)
-        setIntervalId(id)
-      } else if (!isActive && intervalId) {
-        clearInterval(intervalId)
-        setIntervalId(null)
-      }
-      // if (intervalId) return () => clearInterval(intervalId)
+    if (isActive) {
+      intervalId.current = setInterval(() => {
+        setCounter((prevCounter) => prevCounter + 1)
+      }, 100)
+    } else if (intervalId.current) {
+      clearInterval(intervalId.current)
+      intervalId.current = null
     }
 
-    start()
-  }, [isActive, intervalId])
+    return () => {
+      if (intervalId.current) {
+        clearInterval(intervalId.current)
+      }
+    }
+  }, [isActive])
 
   return (
     <>
