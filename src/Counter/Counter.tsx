@@ -1,54 +1,56 @@
-import { useEffect, useState } from "react";
-import { formatTime } from "../Utils/TimeFormater";
+import { useEffect, useState } from 'react'
+import { formatTime } from '../Utils/TimeFormater'
+
+import './Counter.css'
 
 type CounterAction = {
-  counterAction: boolean | string;
-  callback: (record: number) => void;
-};
+  counterAction: boolean | string
+  callback: (record: number) => void
+}
 
 export const Counter = ({ counterAction, callback }: CounterAction) => {
-  const [counter, setCounter] = useState(0);
-  const [isActive, setIsActive] = useState<boolean | string>(false);
-  const [intervalId, setIntervalId] = useState(null);
+  const [counter, setCounter] = useState(0)
+  const [isActive, setIsActive] = useState<boolean>(false)
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    if (counterAction === "reset") {
-      setIsActive(false);
-      setCounter(0);
+    if (counterAction === 'reset') {
+      setIsActive(false)
+      setCounter(0)
     }
-    if (counterAction === "lap") {
-      setCounter(0);
-      setIsActive(false);
-      callback(counter);
+    if (counterAction === 'lap') {
+      setCounter(0)
+      setIsActive(false)
+      callback(counter)
     }
     if (counterAction === true) {
-      setIsActive(true);
+      setIsActive(true)
     }
     if (counterAction === false) {
-      setIsActive(false);
+      setIsActive(false)
     }
-  }, [counterAction]);
-
-  const start = () => {
-    if (isActive) {
-      const id = setInterval(() => {
-        setCounter((prevTime) => prevTime + 1);
-      }, 100);
-      setIntervalId(id as any);
-    } else if (!isActive && intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-    }
-    return () => clearInterval(intervalId as any);
-  };
+  }, [counterAction, counter, callback])
 
   useEffect(() => {
-    start();
-  }, [isActive]);
+    const start = () => {
+      if (isActive) {
+        const id = setInterval(() => {
+          setCounter((prevTime) => prevTime + 1)
+        }, 100)
+        setIntervalId(id)
+      } else if (!isActive && intervalId) {
+        clearInterval(intervalId)
+        setIntervalId(null)
+      }
+      // if (intervalId) return () => clearInterval(intervalId)
+    }
+
+    start()
+  }, [isActive, intervalId])
 
   return (
     <>
-      <h1>{formatTime(counter)}</h1>
+      <h1 className="counter">{formatTime(counter)}</h1>
     </>
-  );
-};
+  )
+}

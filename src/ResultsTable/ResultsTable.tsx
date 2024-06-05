@@ -1,9 +1,9 @@
-import { SingleRecord } from "../Types/types";
-import { ResultTableSingleElement } from "./ResultsTableSingleElement";
+import { SingleRecord } from '../Types/types'
+import { ResultTableSingleElement } from './ResultsTableSingleElement'
 
 type ResultProp = {
-  resultRecord: SingleRecord[];
-};
+  resultRecord: SingleRecord[]
+}
 
 export const ResultTable = ({ resultRecord }: ResultProp) => {
   return (
@@ -12,5 +12,5 @@ export const ResultTable = ({ resultRecord }: ResultProp) => {
         <ResultTableSingleElement key={result.lap} element={result} />
       ))}
     </tbody>
-  );
-};
+  )
+}
